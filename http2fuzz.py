@@ -38,17 +38,6 @@ def signal_handler(sig, frame):
 		print('[-] multiple times of Ctrl+C!')
 	sys.exit(0)
 
-class Tee(object):
-	def __init__(self, *files):
-	   self.files = files
-	def write(self, obj):
-		for f in self.files:
-			f.write(obj)
-			f.flush() # If you want the output to be visible immediately
-	def flush(self) :
-		for f in self.files:
-			f.flush()
-
 class Http2fuzz:
 	def __init__(self, current_state = "init", dst_ip = 'localhost', init_time = None, pcap = None, sm_json = None):
 		### General ###
@@ -742,7 +731,6 @@ def main():
 	pcapname = pcap_path.split("/")[-1]
 	# f = open('./log/'+pcapname+"_"+dt+'.txt', 'w')
 	# original = sys.stdout
-	# sys.stdout = Tee(sys.stdout, f)
 	signal.signal(signal.SIGINT, signal_handler)
 	http2fuzz_obj = Http2fuzz(dst_ip = dst_ip, init_time=dt,
 		pcap = pcap_path,
