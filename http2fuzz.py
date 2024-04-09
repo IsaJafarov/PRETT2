@@ -556,13 +556,8 @@ user-agent:" + user_agent_var + "\n"
 
 			mov_msg_list = self.get_moving_frame(t_key)
 			
-			#print(mov_msg_list)
 			#print(util.h2msg_to_str(t_msg))
 			#print("Transition Message: "+util.h2msg_to_str(t_msg))
-			#if "HE" not in util.h2msg_to_str(t_msg) or len(mov_msg_list)==0 or \
-			#	len(mov_msg_list[0].frames) != 8: continue
-			#print(mov_msg_list)
-			#print(len(mov_msg_list[0].frames))
 			for i in tqdm(range(self.fuzzing_count)):
 				self.exploit_slowloris_vuln(mov_msg_list, t_msg, self.open_socket(dst_ip=self.dst_ip))
 		
@@ -572,7 +567,7 @@ user-agent:" + user_agent_var + "\n"
 		'''
 		The method sends the following messages in order:
 		1. Initial message: Preface + Settings
-			Preface is always static. 
+			The Preface is always static. 
 			The first Settings frame has fuzzed (random) values, such as SETTINGS_INITIAL_WINDOW_SIZE.
 			Which parameters should be fuzzed and the value range can be configured.
 		2. Moving messages (The messages that are sent to reach the particular transition)
@@ -592,7 +587,6 @@ user-agent:" + user_agent_var + "\n"
 		fuzzed_moving_messages = []
 		for msg in moving_messages:
 				msg_fuzz = self.make_fuzzing_message(msg)
-				#msg_fuzz.show()
 				fuzzed_moving_messages.append( msg_fuzz )
 
 		try:
@@ -610,10 +604,10 @@ user-agent:" + user_agent_var + "\n"
 				#print("\nReceived packets: ")
 				#print(received_packet.show())
 		except Exception as e:
-   			# the server closes the connection after the configured timeout (5s). This is normal behaviour.
+   			# the server closes the connection after the configured timeout (5s). This is normal behavior.
 			if str(e) == 'Underlying stream socket tore down':
 				pass
-			# the session is idle for more than than 6 seconds. This is vulnerability.
+			# the session is idle for more than 6 seconds. This is vulnerability.
 			elif str(e) == 'The read operation timed out':
 				self.record_the_vulnerability(init_msg, fuzzed_moving_messages, t_msg)
 
